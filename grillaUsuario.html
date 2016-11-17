@@ -1,0 +1,40 @@
+
+<div>
+		<h1>Listado de usuarios</h1>
+		<input type="search" ng-model="buscador" placeholder="Buscar usuario">		
+		<br/>
+			<div class="divScroll">
+			<table id="listaUsuarios" class="table">
+				<thead>
+					<tr class="bg-primary">
+										
+						<th class="bg-primary">  Email              </th>
+						<th class="bg-primary">  Usuario             </th>
+						<th class="bg-primary">  Contrasena           </th>
+						<th class="bg-primary">  Tipo           </th>
+						<th class="bg-primary">  MODIFICAR           </th>
+						<th class="bg-primary">  BORRAR           </th>
+					</tr> 
+				</thead>
+				
+				<tr ng-repeat="usuario in ListadoUsuario | filter:buscador as resultado" class="bg-primary">
+
+					<!-- <td><img  class='fotoGrilla' ng-src="persona.avatar" /></td> -->
+		
+					<td class="bg-primary">{{usuario.email}}</td>
+					<td class="bg-primary">{{usuario.nombreuser}}</td>
+					<td class="bg-primary">{{usuario.password}}</td>
+					<td class="bg-primary">{{usuario.tipo}}</td>
+
+					<td><button class='btn btn-warning' name='Modificar' ui-sref="usuario.modificar({id:usuario.id, email:usuario.email, nombreuser:usuario.nombreuser, password:usuario.password, tipo:usuario.tipo})"><span class='glyphicon glyphicon-edit'>&nbsp;</span>Modificar</button></td>
+
+					<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(usuario)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>
+										
+				</tr>
+				
+			</table>
+			<div ng-if="resultado.length==0">
+				No hay productos con ese critero.
+			</div>
+		</div>
+</div>

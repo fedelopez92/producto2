@@ -1,0 +1,23 @@
+		<h1>Agregar producto</h1>
+		<br/>
+		<form name="FormProducto" method=post novalidate>
+
+		<p>
+			<input type="number" name="codbarra" ng-model="producto.codbarra" placeholder="ingrese codigo de barra" required>
+			<br/>
+			<span ng-show="FormProducto.codbarra.$error.required">El codigo de barra es requerido</span>
+			<span ng-show="FormProducto.codbarra.$error.number">Solo puede contener numeros</span>
+		</p>
+
+
+		<p>
+			<input type="text" name="nombre" ng-model="producto.nombre" placeholder="ingrese producto" required>
+			<br/>
+			<span ng-show="FormProducto.nombre.$error.required">El producto es requerido</span>
+		</p>
+
+		<p>
+		  <input type="button" class="btn btn-info" ng-disabled="FormProducto.$invalid" ng-click="Alta()" value="Ingresar">
+		</p>
+
+		</form>

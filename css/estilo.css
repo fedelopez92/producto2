@@ -1,0 +1,85 @@
+span{
+
+  font-size:80%;
+}
+
+input[type="text"] {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+input[type="email"] {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+input[type="password"] {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+input[type="number"] {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+input[type="date"] {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+input[type="search"] {
+
+  display: block;
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+
+input.ng-invalid {
+    background-color: red;
+}
+input.ng-valid {
+    background-color: orange;
+}
+
+select {
+
+  /*display: block;*/
+  color:black;
+height: 1,5em;
+width: 50%;
+}
+
+select.ng-invalid {
+    background-color: red;
+}
+select.ng-valid {
+    background-color: orange;
+}
+
+
+
+.divScroll {
+    overflow-y:scroll;
+    height:250px;
+    width:800px;
+}
+
+

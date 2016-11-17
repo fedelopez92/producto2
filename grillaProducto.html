@@ -1,0 +1,28 @@
+
+<div>
+		<h1>Listado de productos</h1>
+		<input type="search" ng-model="buscador" placeholder="Buscar producto">		
+		<br/>
+			<div class="divScroll">
+			<table id="listaProductos" class="table">
+				<thead>
+					<tr class="bg-primary">
+										
+						<th class="bg-primary">  Codigo de barra              </th>
+						<th class="bg-primary">  Producto             </th>
+					</tr> 
+				</thead>
+				
+				 <tr ng-repeat="producto in ListadoProducto | filter:buscador as resultado" class="bg-primary">
+		
+					<td class="bg-primary">{{producto.codbarra}}</td>
+					<td class="bg-primary">{{producto.nombre}}</td>
+										
+				</tr> 
+				
+			</table>
+			<div ng-if="resultado.length==0">
+				No hay productos con ese critero.
+			</div>
+		</div>
+</div>

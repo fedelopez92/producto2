@@ -1,0 +1,33 @@
+
+<div>
+		<h1>Eliminar producto</h1>
+		<input type="search" ng-model="buscador" placeholder="Buscar producto">		
+		<br/>
+			<div class="divScroll">
+			<table id="listaProductos" class="table">
+				<thead>
+					<tr class="bg-primary">
+										
+						<th class="bg-primary">  Codigo de barra              </th>
+						<th class="bg-primary">  Producto             </th>
+						<th class="bg-primary">  BORRAR           </th>
+					</tr> 
+				</thead>
+				
+				<tr ng-repeat="producto in ListadoProducto | filter:buscador as resultado" class="bg-primary">
+
+					<!-- <td><img  class='fotoGrilla' ng-src="persona.avatar" /></td> -->
+		
+					<td class="bg-primary">{{producto.codbarra}}</td>
+					<td class="bg-primary">{{producto.nombre}}</td>
+
+					<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(producto)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>
+										
+				</tr>
+				
+			</table>
+			<div ng-if="resultado.length==0">
+				No hay productos con ese critero.
+			</div>
+		</div>
+</div>
