@@ -1,9 +1,17 @@
   
-  app.service('Usuario', function ($http) {
+  app.factory('factoryUsuario', function ($http) {
 
+    var objeto = {};
 
-    this.Insertar =function(usuario){
-      return $http.post('http://localhost/producto/ws1/usuario/' + JSON.stringify(usuario)).then(
+    objeto.Insertar = Insertar;
+    objeto.Modificar = Modificar;
+    objeto.Borrar = Borrar;
+    objeto.TraerTodos = TraerTodos;
+
+    return objeto;
+
+    function Insertar(usuario){
+      return $http.post('http://localhost/producto2/ws1/usuario/' + JSON.stringify(usuario)).then(
         function (respuesta){
           return "Se agrego el usuario !";
         },
@@ -13,8 +21,8 @@
         );
     }
 
-    this.Modificar =function(usuario){
-      return $http.put('http://localhost/producto/ws1/usuario/' + JSON.stringify(usuario)).then(
+    function Modificar(usuario){
+      return $http.put('http://localhost/producto2/ws1/usuario/' + JSON.stringify(usuario)).then(
         function (respuesta){
           return "Se modifico el usuario !";
         },
@@ -24,8 +32,8 @@
         );
     }
 
-    this.Borrar =function(usuario){
-      return $http.delete('http://localhost/producto/ws1/usuario/' + JSON.stringify(usuario)).then(
+    function Borrar(usuario){
+      return $http.delete('http://localhost/producto2/ws1/usuario/' + JSON.stringify(usuario)).then(
         function (respuesta){
           return respuesta;
         },
@@ -35,8 +43,8 @@
         );
     }
 
-    this.TraerTodos =function(){
-      return $http.get('http://localhost/producto/ws1/usuarios').then(
+    function TraerTodos(){
+      return $http.get('http://localhost/producto2/ws1/usuarios').then(
         function (respuesta){
           return respuesta.data.listado;
         },

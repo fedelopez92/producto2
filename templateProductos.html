@@ -1,0 +1,21 @@
+<div>
+<table id="listaProductos" class="table">
+	<thead>
+		<tr>						
+			<th>Producto</th>
+			<th>Porcentaje</th>
+			<th>BORRAR    </th>
+		</tr> 
+	</thead>
+	
+	<tr ng-repeat="producto in ListadoProducto | filter:buscador as resultado">
+
+		<!-- <td><img  class='fotoGrilla' ng-src="persona.avatar" /></td> -->
+
+		<td>{{producto.nombre}}</td>
+		<td>{{producto.porcentaje}}</td>
+
+		<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(producto)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>							
+	</tr>				
+</table>
+</div>

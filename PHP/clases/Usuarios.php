@@ -5,9 +5,9 @@ class Usuario
 //--------------------------------------------------------------------------------//
 //--ATRIBUTOS
 	public $id;
-	public $nombreuser;
-  	public $email;
-  	public $password;
+	public $nombre;
+  	public $correo;
+  	public $clave;
   	public $tipo;
 
 //--------------------------------------------------------------------------------//
@@ -19,20 +19,20 @@ class Usuario
 		return $this->id;
 	}
 	
-	public function GetNombreUser()
+	public function GetNombre()
 	{
-		return $this->nombreuser;
+		return $this->nombre;
 	}
 	
-	public function GetEmail()
+	public function GetCorreo()
 	{
-		return $this->email;
+		return $this->correo;
 	}
 	
 	
-	public function GetPassword()
+	public function GetClave()
 	{
-		return $this->password;
+		return $this->clave;
 	}
 
 	public function GetTipo()
@@ -46,19 +46,19 @@ class Usuario
 		$this->id = $valor;
 	}
 	
-	public function SetNombreUser($valor)
+	public function SetNombre($valor)
 	{
-		$this->nombreuser = $valor;
+		$this->nombre = $valor;
 	}
 	
-	public function SetEmail($valor)
+	public function SetCorreo($valor)
 	{
-		$this->email = $valor;
+		$this->correo = $valor;
 	}
 	
-	public function SetPassword($valor)
+	public function SetClave($valor)
 	{
-		$this->password = $valor;
+		$this->clave = $valor;
 	}
 
 	public function SetTipo($valor)
@@ -72,12 +72,12 @@ class Usuario
 	public function __construct($id=NULL)
 	{
 		if($id != NULL){
-			$obj = nombreuser::TraerUnUsuario($id);
+			$obj = nombre::TraerUnUsuario($id);
 			
-			$this->nombreuser = $obj->nombreuser;
-			$this->email = $email;
+			$this->nombre = $obj->nombre;
+			$this->correo = $correo;
 			$this->id = $obj->id;
-			$this->password = $obj->password;
+			$this->clave = $obj->clave;
 			$this->tipo = $obj->tipo;
 
 		}
@@ -87,7 +87,7 @@ class Usuario
 //--TOSTRING	
   	public function ToString()
 	{
-	  	return $this->email."-".$this->nombreuser."-".$this->tipo;
+	  	return $this->correo."-".$this->nombre."-".$this->tipo;
 	}
 //--------------------------------------------------------------------------------//
 
@@ -97,7 +97,7 @@ class Usuario
 	public static function TraerTodosLosUsuarios()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select * from usuarios");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from misusuarios");
 		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerTodasLasUsuarios() ");
 		$consulta->execute();			
 		$arrUsuarios= $consulta->fetchAll(PDO::FETCH_CLASS, "usuario");	
@@ -108,11 +108,11 @@ class Usuario
 	{	
 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select * from usuarios where nombreuser =:nombreuser");
-		$consulta->bindValue(':nombreuser', $nombreUsuario, PDO::PARAM_STR);
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from misusuarios where nombre =:nombre");
+		$consulta->bindValue(':nombre', $nombreUsuario, PDO::PARAM_STR);
 		$consulta->execute();
-		$nombreuserBuscado= $consulta->fetchObject('usuario');
-		return $nombreuserBuscado;	
+		$nombreBuscado= $consulta->fetchObject('usuario');
+		return $nombreBuscado;	
 					
 	}
 
@@ -121,12 +121,12 @@ class Usuario
 	public static function InsertarUsuario($usuario)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombreuser,email,password,tipo)
-															values(:nombreuser,:email,:password,:tipo)");
-		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombreuser,:apellido,:email,:foto)");
-		$consulta->bindValue(':nombreuser',$usuario->nombreuser, PDO::PARAM_STR);
-		$consulta->bindValue(':email', $usuario->email, PDO::PARAM_STR);
-		$consulta->bindValue(':password', $usuario->password, PDO::PARAM_STR);
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into misusuarios (nombre,correo,clave,tipo)
+															values(:nombre,:correo,:clave,:tipo)");
+		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombre,:apellido,:correo,:foto)");
+		$consulta->bindValue(':nombre',$usuario->nombre, PDO::PARAM_STR);
+		$consulta->bindValue(':correo', $usuario->correo, PDO::PARAM_STR);
+		$consulta->bindValue(':clave', $usuario->clave, PDO::PARAM_STR);
 		$consulta->bindValue(':tipo', $usuario->tipo, PDO::PARAM_STR);
 		$consulta->execute();		
 		return $objetoAccesoDato->RetornarUltimoIdInsertado();
@@ -137,8 +137,8 @@ class Usuario
 	public static function BorrarUsuario($idParametro)
 	{	
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("delete from usuarios WHERE id=:id");	
-		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Borrarnombreuser(:id)");	
+		$consulta =$objetoAccesoDato->RetornarConsulta("delete from misusuarios WHERE id=:id");	
+		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Borrarnombre(:id)");	
 		$consulta->bindValue(':id',$idParametro, PDO::PARAM_INT);		
 		$consulta->execute();
 		return $consulta->rowCount();
@@ -149,18 +149,18 @@ class Usuario
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("
-				update usuarios 
-				set nombreuser=:nombreuser,
-				email=:email,
-				password=:password,
+				update misusuarios 
+				set nombre=:nombre,
+				correo=:correo,
+				clave=:clave,
 				tipo=:tipo
 				WHERE id=:id");
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Modificarnombreuser(:id,:email,:fechavotacion,:foto)");
+			//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Modificarnombre(:id,:correo,:fechavotacion,:foto)");
 			$consulta->bindValue(':id',$usuario->id, PDO::PARAM_INT);
-			$consulta->bindValue(':nombreuser',$usuario->nombreuser, PDO::PARAM_STR);
-			$consulta->bindValue(':email', $usuario->email, PDO::PARAM_STR);
-			$consulta->bindValue(':password', $usuario->password, PDO::PARAM_STR);
+			$consulta->bindValue(':nombre',$usuario->nombre, PDO::PARAM_STR);
+			$consulta->bindValue(':correo', $usuario->correo, PDO::PARAM_STR);
+			$consulta->bindValue(':clave', $usuario->clave, PDO::PARAM_STR);
 			$consulta->bindValue(':tipo', $usuario->tipo, PDO::PARAM_STR);
 			return $consulta->execute();
 	}

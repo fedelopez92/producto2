@@ -3,7 +3,7 @@
 
 
     this.Insertar =function(producto){
-      return $http.post('http://localhost/producto/ws1/producto/' + JSON.stringify(producto)).then(
+      return $http.post('http://localhost/producto2/ws1/producto/' + JSON.stringify(producto)).then(
         function (respuesta){
           return "Se agrego el producto !";
         },
@@ -15,7 +15,7 @@
     }
 
     this.Borrar =function(producto){
-      return $http.delete('http://localhost/producto/ws1/producto/' + JSON.stringify(producto)).then(
+      return $http.delete('http://localhost/producto2/ws1/producto/' + JSON.stringify(producto)).then(
         function (respuesta){
           return respuesta;
         },
@@ -26,7 +26,7 @@
     }
 
     this.TraerTodos =function(){
-      return $http.get('http://localhost/producto/ws1/productos').then(
+      return $http.get('http://localhost/producto2/ws1/productos').then(
         function (respuesta){
           return respuesta.data.listado;
         },

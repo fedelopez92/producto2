@@ -3,13 +3,13 @@ include "clases/Usuarios.php";
 include_once '../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
-// $key = "example_key";
-// $token = array(
-//     "iss" => "http://example.org",
-//     "aud" => "http://example.com",
-//     "iat" => 1356999524,
-//     "nbf" => 1357000000
-// );
+/*$key = "example_key";
+$token = array(
+     "iss" => "http://example.org",
+     "aud" => "http://example.com",
+     "iat" => 1356999524,
+     "nbf" => 1357000000
+ );*/
 
 /**
  * IMPORTANT:
@@ -24,27 +24,29 @@ $DatosDelModeloPorPost=file_get_contents('php://input');
 //echo json_encode($DatosDelModeloPorPost);
 $user=json_decode($DatosDelModeloPorPost);
 //echo json_encode($user);
-$usuarioBuscado=Usuario::TraerUnUsuario($user->nombreuser);
+$usuarioBuscado=Usuario::TraerUnUsuario($user->nombre);
 //echo json_encode($usuarioBuscado);
-if($usuarioBuscado->email == $user->email && $usuarioBuscado->nombreuser == $user->nombreuser && $usuarioBuscado->password == $user->password)
+if($usuarioBuscado->correo == $user->correo && $usuarioBuscado->nombre == $user->nombre && $usuarioBuscado->clave == $user->clave)
 //if($user->email == 'usuario@dominio.com' && $user->password=='claveadmin')
 {
 	$key="1234";
 	$token["iat"]=time();
 	$token["exp"]= time()+1800; //el token caduca en media hora
 
-	$token["username"]="usuario";
-	$token["tipoUsuario"]="admin";
+	$token["nombre"]=$usuarioBuscado->nombre;
+	$token["tipo"]=$usuarioBuscado->tipo;
 	//$token es un array
 	$jwt = JWT::encode($token, $key);
 
-	$arrayConToken["MiTokenGeneradoEnPHP"]=$jwt;
+	$arrayConToken["miToken"]=$jwt;
 }
 else
 {
-	$arrayConToken["MiTokenGeneradoEnPHP"] = false;
+	$arrayConToken["miToken"] = false;
 }
+
 echo json_encode($arrayConToken);
+
 
 
 

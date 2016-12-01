@@ -2,18 +2,12 @@ var app = angular.module('Producto', ['ui.router','satellizer']);
 
 app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
 
-$authProvider.loginUrl = 'producto/PHP/auth.php';
-$authProvider.tokenName='MiTokenGeneradoEnPHP';
-$authProvider.tokenPrefix='Producto';
-$authProvider.authHeader='data';
+$authProvider.loginUrl = 'producto2/PHP/auth.php';
+$authProvider.tokenName = 'miToken';
+$authProvider.tokenPrefix = 'practicapp';
+$authProvider.authHeader="data";
 
-$authProvider.oauth2({
-      name: 'Producto',
-      url: 'http://localhost',
-      clientId: '6f75fe7eef2e44b657dd',
-      redirectUri: 'http://localhost/producto/#/usuario/login',
-      authorizationEndpoint:  'http://localhost/producto/#/usuario/login',
-    });
+
 
 $stateProvider
 
@@ -25,7 +19,16 @@ $stateProvider
       .state('usuario', {
                 url : '/usuario',
                 abstract:true,//permite que con diferentes rutas se le pueda agregar contenidos de otros state 
-                templateUrl : 'abstractoUsuario.html'
+                templateUrl : 'abstractoUsuario.html',
+                controller : 'controlAbstractoUser'
+            })
+      .state('usuario.menu', {
+                url: '/menu',
+                views: {
+                    'contenido': {
+                        templateUrl: 'menuUsuario.html'
+                    }
+                }
             })
       .state('usuario.login', {
                 url: '/login',
@@ -63,7 +66,7 @@ $stateProvider
                 }
             })
       .state('usuario.modificar', {
-                url: '/modificar/{id}?:email:nombreuser:password:tipo',
+                url: '/modificar/{id}?:correo:nombre:clave:tipo',
                 views: {
                     'contenido': {
                         templateUrl: 'altaUsuario.html',
@@ -74,7 +77,8 @@ $stateProvider
       .state('producto', {
                 url : '/producto',
                 abstract:true,//permite que con diferentes rutas se le pueda agregar contenidos de otros state 
-                templateUrl : 'abstractoProducto.html'
+                templateUrl : 'abstractoProducto.html',
+                controller : 'controlAbstractoProducto'
             })
       .state('producto.alta', {
                 url: '/alta',
@@ -112,11 +116,31 @@ $stateProvider
 
 app.controller('controlInicio', function($scope, $state, $auth) {
 
-    //console.info('Payload: ',$auth.getPayload());
-    $scope.menuState = {}
-    $scope.menuState.show = false;
+    $scope.IniciarSesion = true;
+    $scope.CerrarSesion = false;
+    $scope.Admin = false;
+    $scope.CompAdmin = false;
+    $scope.VendAdmin = false;
+
+
     if ($auth.isAuthenticated()) {                   
-        $scope.menuState.show = !$scope.menuState.show; 
+        
+        $scope.IniciarSesion = false;
+        $scope.CerrarSesion = true;
+
+        if($auth.getPayload().tipo=="administrador" || $auth.getPayload().tipo=="comprador"){
+            $scope.CompAdmin = true; 
+        }
+
+        if($auth.getPayload().tipo=="administrador" || $auth.getPayload().tipo=="vendedor"){
+            $scope.VendAdmin = true; 
+        }
+
+        if($auth.getPayload().tipo=="administrador"){
+            $scope.Admin = true; 
+        }
+
+        $scope.nombreuser =  $auth.getPayload().nombre;  
     }
 })
 
@@ -125,77 +149,135 @@ app.controller('controlUsuarioSalir', function($scope, $state, $http, $auth) {
    $state.go("inicio");
  });
 
-app.controller('controlLogin', function($scope, $scope, $state, $http, $auth) {
+app.controller('controlLogin', function($scope, $state, $http, $auth) {
 
     $scope.usuario={};
-   
+    
 
+    $scope.DatosAdmin= function(){
+      $scope.usuario.correo = "admin@admin.com";
+      $scope.usuario.nombre = "admin";
+      $scope.usuario.clave = "321";
+    }
+
+    $scope.DatosComprador= function(){
+      $scope.usuario.correo = "comp@comp.com";
+      $scope.usuario.nombre = "comprador";
+      $scope.usuario.clave = "123";
+    }
+
+    $scope.DatosVendedor= function(){
+      $scope.usuario.correo = "vend@vend.com";
+      $scope.usuario.nombre = "vend";
+      $scope.usuario.clave = "321";
+    }
+
+    
+    
     $scope.Login= function(){
        $auth.login($scope.usuario)
           .then(function(response) {
             console.info('correcto', response);
             
             if ($auth.isAuthenticated()) {                   
-                  alert("loggeado exitosamente");
-                  $state.go("inicio"); 
+                  
+                  $state.go("inicio");
             }     
             else {
                  alert("no se pudo loggear");
             }
 
-            //console.info('Payload: ',$auth.getPayload());
+            console.info('Payload: ',$auth.getPayload());
             console.info('El token es: ',$auth.getToken()); 
 
           })
 
           .catch(function(response) {
             console.info('no volvio bien', response); 
-            //console.info('Payload: ',$auth.getPayload());
+            console.info('Payload: ',$auth.getPayload());
             console.info('El token es: ',$auth.getToken());  
           })
         }
 
 });
 
-app.controller('controlProductoAlta', function($scope, Producto, $state) {
+app.controller('controlAbstractoUser', function($scope, $auth) {
 
-    $scope.producto={};
+    if ($auth.isAuthenticated()) {
+      $scope.nombreuser =  $auth.getPayload().nombre;
+    }
 
-    $scope.Alta=function(){
-      Producto.Insertar($scope.producto).then(
-      function(respuesta){
-        alert(respuesta);
-        $state.go("inicio");
-      },
-      function(error){
-        console.log(error);
+});
+
+app.controller('controlAbstractoProducto', function($scope, $auth) {
+
+    if ($auth.isAuthenticated()) {
+      $scope.nombreuser =  $auth.getPayload().nombre;
+    }
+      
+});
+
+
+app.controller('controlProductoAlta', function($scope, Producto, $state, $auth) {
+
+    if ($auth.isAuthenticated() && $auth.getPayload().tipo !="comprador") {                   
+
+      $scope.producto={};
+
+      $scope.Alta=function(){
+        Producto.Insertar($scope.producto).then(
+        function(respuesta){
+          alert(respuesta);
+          $state.go("inicio");
+        },
+        function(error){
+          console.log(error);
+        }
+      );
       }
-    );
+    }
+    else
+    {
+        $state.go("usuario.login");
     }
 })
 
-app.controller('controlProductoGrilla', function($scope, Producto) {
+app.controller('controlProductoGrilla', function($scope, Producto, $state, $auth) {
 
-    Producto.TraerTodos().then(
-      function(respuesta){
-        $scope.ListadoProducto = respuesta;
-      },
-      function(error){
-        console.log(error);
-      }
-    );
+    if ($auth.isAuthenticated()) {
+
+      Producto.TraerTodos().then(
+        function(respuesta){
+          $scope.ListadoProducto = respuesta;
+        },
+        function(error){
+          console.log(error);
+        }
+      );
+    }
+    else
+    {
+        $state.go("usuario.login");
+    }
 })
 
-app.controller('controlEliminarProducto', function($scope, Producto, $state) {
+app.controller('controlEliminarProducto', function($scope, Producto, $state, $auth) {
 
-    Producto.TraerTodos().then(
-      function(respuesta){
-        $scope.ListadoProducto = respuesta;
-      },
-      function(error){
-        console.log(error);
-      }
-    );
+    if ($auth.isAuthenticated() && $auth.getPayload().tipo !="comprador") {
+
+      Producto.TraerTodos().then(
+        function(respuesta){
+          $scope.ListadoProducto = respuesta;
+        },
+        function(error){
+          console.log(error);
+        }
+      );
+    }
+    else
+    {
+        $state.go("usuario.login");
+    }
 
     $scope.Borrar=function(producto){
       Producto.Borrar(producto).then(
@@ -210,60 +292,76 @@ app.controller('controlEliminarProducto', function($scope, Producto, $state) {
 
 })
 
-app.controller('controlUserAlta', function($scope, Usuario, $state) {
+app.controller('controlUserAlta', function($scope, factoryUsuario, $state, $auth) {
 
-    $scope.usuario={};
+   if ($auth.isAuthenticated() && $auth.getPayload().tipo == "administrador") {
 
-    $scope.Ingresar=function(){
-      Usuario.Insertar($scope.usuario).then(
-      function(respuesta){
-        alert(respuesta);
-        $state.go("inicio");
-      },
-      function(error){
-        console.log(error);
+      $scope.usuario={};
+
+      $scope.Ingresar=function(){
+        factoryUsuario.Insertar($scope.usuario).then(
+        function(respuesta){
+          alert(respuesta);
+          $state.go("inicio");
+        },
+        function(error){
+          console.log(error);
+        }
+      );
       }
-    );
     }
-})
-
-app.controller('controlUserGrilla', function($scope, Usuario, $state) {
-
-    Usuario.TraerTodos().then(
-      function(respuesta){
-        $scope.ListadoUsuario = respuesta;
-      },
-      function(error){
-        console.log(error);
-      }
-    );
-
-    $scope.Borrar=function(usuario){
-      Usuario.Borrar(usuario).then(
-      function(respuesta){
-        $state.reload();
-      },
-      function(error){
-        console.log(error);
-      }
-    );
+    else
+    {
+        $state.go("usuario.login");
     }
 
 })
 
-app.controller('controlUserModificacion', function($scope, Usuario, $state, $stateParams) {
+app.controller('controlUserGrilla', function($scope, factoryUsuario, $state, $auth) {
+
+    if ($auth.isAuthenticated() && $auth.getPayload().tipo == "administrador") {
+
+      factoryUsuario.TraerTodos().then(
+        function(respuesta){
+          $scope.ListadoUsuario = respuesta;
+        },
+        function(error){
+          console.log(error);
+        }
+      );
+
+      $scope.Borrar=function(usuario){
+        factoryUsuario.Borrar(usuario).then(
+        function(respuesta){
+          $state.reload();
+        },
+        function(error){
+          console.log(error);
+        }
+      );
+      }
+    }
+    else
+    {
+        $state.go("usuario.login");
+    }
+
+
+})
+
+app.controller('controlUserModificacion', function($scope, factoryUsuario, $state, $stateParams) {
 
     $scope.usuario={};
 
     $scope.usuario.id=$stateParams.id;
-    $scope.usuario.email=$stateParams.email;
-    $scope.usuario.nombreuser=$stateParams.nombreuser;
-    $scope.usuario.password=$stateParams.password;
+    $scope.usuario.correo=$stateParams.correo;
+    $scope.usuario.nombre=$stateParams.nombre;
+    $scope.usuario.clave=$stateParams.clave;
     $scope.usuario.tipo=$stateParams.tipo;
 
 
     $scope.Ingresar=function(){
-      Usuario.Modificar($scope.usuario).then(
+      factoryUsuario.Modificar($scope.usuario).then(
       function(respuesta){
         alert(respuesta);
         $state.go("usuario.grilla");
@@ -274,4 +372,5 @@ app.controller('controlUserModificacion', function($scope, Usuario, $state, $sta
     );
     }
 })
+
 

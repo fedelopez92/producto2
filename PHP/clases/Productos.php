@@ -5,7 +5,7 @@ class Producto
 //--------------------------------------------------------------------------------//
 //--ATRIBUTOS
 	public $id;
-	public $codbarra;
+	public $porcentaje;
  	public $nombre;
 
 //--------------------------------------------------------------------------------//
@@ -20,9 +20,9 @@ class Producto
 	{
 		return $this->nombre;
 	}
-	public function GetCodBarra()
+	public function GetPorcentaje()
 	{
-		return $this->codbarra;
+		return $this->porcentaje;
 	}
 
 	public function SetId($valor)
@@ -33,9 +33,9 @@ class Producto
 	{
 		$this->nombre = $valor;
 	}
-	public function SetCodBarra($valor)
+	public function SetPorcentaje($valor)
 	{
-		$this->codbarra = $valor;
+		$this->porcentaje = $valor;
 	}
 
 //--------------------------------------------------------------------------------//
@@ -46,7 +46,7 @@ class Producto
 			$obj = Producto::TraerUnProducto($id);
 			
 			$this->nombre = $obj->nombre;
-			$this->codbarra = $obj->codbarra;
+			$this->porcentaje = $obj->porcentaje;
 		}
 	}
 
@@ -54,7 +54,7 @@ class Producto
 //--TOSTRING	
   	public function ToString()
 	{
-	  	return $this->nombre."-".$this->codbarra;
+	  	return $this->nombre."-".$this->porcentaje;
 	}
 //--------------------------------------------------------------------------------//
 
@@ -65,7 +65,7 @@ class Producto
 
 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select * from productos where id =:id");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from misproductos where id =:id");
 		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerUnaproducto(:id)");
 		$consulta->bindValue(':id', $idParametro, PDO::PARAM_INT);
 		$consulta->execute();
@@ -77,7 +77,7 @@ class Producto
 	public static function TraerTodosLosProductos()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("select * from productos");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from misproductos");
 		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerTodasLasproductos() ");
 		$consulta->execute();			
 		$arrproductos= $consulta->fetchAll(PDO::FETCH_CLASS, "producto");	
@@ -87,7 +87,7 @@ class Producto
 	public static function BorrarProducto($idParametro)
 	{	
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("delete from productos WHERE id=:id");	
+		$consulta =$objetoAccesoDato->RetornarConsulta("delete from misproductos WHERE id=:id");	
 		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Borrarproducto(:id)");	
 		$consulta->bindValue(':id',$idParametro, PDO::PARAM_INT);		
 		$consulta->execute();
@@ -99,14 +99,14 @@ class Producto
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("
-				update productos 
-				set codbarra=:codbarra,
+				update misproductos 
+				set porcentaje=:porcentaje,
 				nombre=:nombre
 				WHERE id=:id");
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Modificarproducto(:id,:codbarra,:nombre,:foto)");
+			//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Modificarproducto(:id,:porcentaje,:nombre,:foto)");
 			$consulta->bindValue(':id',$producto->id, PDO::PARAM_INT);
-			$consulta->bindValue(':codbarra',$producto->codbarra, PDO::PARAM_INT);
+			$consulta->bindValue(':porcentaje',$producto->porcentaje, PDO::PARAM_STR);
 			$consulta->bindValue(':nombre', $producto->nombre, PDO::PARAM_STR);	
 			return $consulta->execute();
 	}
@@ -118,9 +118,9 @@ class Producto
 	public static function InsertarProducto($producto)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into productos (codbarra,nombre)values(:codbarra,:nombre)");
-		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Insertarproducto (:codbarra,:nombre,:dni,:foto)");
-		$consulta->bindValue(':codbarra',$producto->codbarra, PDO::PARAM_INT);
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into misproductos (porcentaje,nombre)values(:porcentaje,:nombre)");
+		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL Insertarproducto (:porcentaje,:nombre,:dni,:foto)");
+		$consulta->bindValue(':porcentaje',$producto->porcentaje, PDO::PARAM_STR);
 		$consulta->bindValue(':nombre', $producto->nombre, PDO::PARAM_STR);
 		$consulta->execute();		
 		return $objetoAccesoDato->RetornarUltimoIdInsertado();

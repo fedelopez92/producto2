@@ -1,40 +1,48 @@
+<div class="container">
+		<div class="page-header">
+			<center> <h1>ABM Producto</h1>   </center>     
+		</div>
+		<div class="CajaInicio animated bounceInRight">
+			<h1> Agregar usuario </h1>
 
-		<form name="FormUsuario" novalidate>
+		<div align="center">
+			<form name="FormUsuario" novalidate>
 
-		<p>
-			<input type="email" name="email" ng-model="usuario.email" placeholder="ingrese email" required>
-			<br/>
-			<span ng-show="FormUsuario.email.$error.required">El email es requerido</span>
-			<span ng-show="FormUsuario.email.$error.email">El email es invalido</span>
-		</p>
+			<p>
+				<input type="email" name="email" ng-model="usuario.correo" placeholder="ingrese email" required>
+				<br/>
+				<span ng-show="FormUsuario.email.$error.required">El email es requerido</span>
+				<span ng-show="FormUsuario.email.$error.email">El email es invalido</span>
+			</p>
 
-		<p>
-			<input type="text" name="nombreuser" ng-model="usuario.nombreuser" placeholder="ingrese usuario" required>
-			<br/>
-			<span ng-show="FormUsuario.nombreuser.$error.required">El usuario es requerido</span>
-		</p>
-
-
-		<p>
-			<input type="password" name="password" ng-model="usuario.password" ng-minlength="7" placeholder="ingrese contrasena" required>
-			<br/>
-			<span ng-show="FormUsuario.password.$error.required">La contrasena es requerida</span>
-			<span ng-show="FormUsuario.password.$error.minlength">La contrasena debe tener como minimo 7 caracteres</span>
-		</p>
-
-		<p>
-			<select name="tipo" ng-model="usuario.tipo" required>
-			  <option value="administrador">Administrador</option> 
-			  <option value="comprador">Comprador</option>
-			  <option value="vendedor">Vendedor</option>
-			</select>
-			<br/>
-			<span ng-show="FormUsuario.tipo.$error.required">El estado es requerido</span>
-		</p>
-
-		<p>
-		  <input type="button" class="btn btn-info" ng-disabled="FormUsuario.$invalid" ng-click="Ingresar()" value="Ingresar">
-		</p>
+			<p>
+				<input type="text" name="nombreuser" ng-model="usuario.nombre" placeholder="ingrese usuario" required>
+				<br/>
+				<span ng-show="FormUsuario.nombreuser.$error.required">El usuario es requerido</span>
+			</p>
 
 
-		</form>
+			<p>
+				<input type="password" name="password" ng-model="usuario.clave" placeholder="ingrese contrasena" required>
+				<br/>
+				<span ng-show="FormUsuario.password.$error.required">La contrasena es requerida</span>
+			</p>
+
+			<p>
+				<select name="tipo" ng-model="usuario.tipo" required>
+				  <option value="administrador">Administrador</option> 
+				  <option value="comprador">Comprador</option>
+				  <option value="vendedor">Vendedor</option>
+				</select>
+				<br/>
+				<span ng-show="FormUsuario.tipo.$error.required">El estado es requerido</span>
+			</p>
+
+			<p>
+			  <input type="button" class="btn btn-info" ng-disabled="FormUsuario.$invalid" ng-click="Ingresar()" value="Ingresar">
+			</p>
+
+
+			</form>
+		</div>
+	</div>
